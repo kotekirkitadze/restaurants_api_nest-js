@@ -35,7 +35,7 @@ export class RestaurantsService {
     });
   }
 
-  async deleteRest(payload: { _id: string }) {
-    return this.restaurantModel.deleteOne(payload);
+  async deleteRestaurant(id: string) {
+    return await this.restaurantModel.findByIdAndDelete(id);
   }
 }

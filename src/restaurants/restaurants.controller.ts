@@ -42,8 +42,13 @@ export class RestaurantsController {
     return this.restaurant.updateRestaurant(id, restaurant);
   }
 
-  @Delete()
-  async delete(@Body() payload) {
-    return this.restaurant.deleteRest(payload);
+  @Delete(':id')
+  async deleteRestaurant(@Param('id') id: string) {
+    await this.restaurant.findById(id);
+    const res = this.restaurant.deleteRestaurant(id);
+    if (res)
+      return {
+        deleted: true,
+      };
   }
 }
