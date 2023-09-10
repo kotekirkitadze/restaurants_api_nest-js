@@ -13,11 +13,24 @@ import { Restaurant } from './schemas/restaurant.schema';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { Query as ExpressQuery } from 'express-serve-static-core';
+import { ApiParam } from '@nestjs/swagger';
 @Controller('restaurants')
 export class RestaurantsController {
   constructor(private restaurant: RestaurantsService) {}
 
   @Get()
+  @ApiParam({
+    name: 'keyword',
+    required: false,
+    description: 'Search restaurant by this keyword',
+    type: String,
+  })
+  @ApiParam({
+    name: 'page',
+    required: false,
+    description: 'page number',
+    type: Number,
+  })
   async getAllRestaurants(@Query() query: ExpressQuery): Promise<Restaurant[]> {
     return this.restaurant.findAll(query);
   }
