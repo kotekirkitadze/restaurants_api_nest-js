@@ -28,8 +28,6 @@ export class RestaurantsService {
     return restaurant;
   }
 
-  // Update by Id
-
   async deleteRest(payload: { _id: string }) {
     return this.restaurantModel.deleteOne(payload);
   }
