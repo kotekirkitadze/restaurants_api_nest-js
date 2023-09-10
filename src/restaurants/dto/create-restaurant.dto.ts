@@ -17,9 +17,15 @@ export class CreateRestaurantDto {
     example: 'test@gmail.com',
   })
   readonly email: string;
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The phone number of the restaurant',
+    example: '555555555',
+  })
   readonly phoneNo: number;
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The address of the restaurant',
+    example: 'Tbilisi, Georgia',
+  })
   readonly address: string;
   @ApiProperty({
     enum: ['Fast Food', 'Cafe', 'Fine Dinning'],
