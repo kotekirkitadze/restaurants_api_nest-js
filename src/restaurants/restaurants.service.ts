@@ -28,6 +28,13 @@ export class RestaurantsService {
     return restaurant;
   }
 
+  async updateRestaurant(id: string, restaurant: Restaurant) {
+    return await this.restaurantModel.findByIdAndUpdate(id, restaurant, {
+      new: true,
+      runValidators: true,
+    });
+  }
+
   async deleteRest(payload: { _id: string }) {
     return this.restaurantModel.deleteOne(payload);
   }

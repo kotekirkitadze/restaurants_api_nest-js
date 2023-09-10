@@ -10,6 +10,7 @@ import {
 import { RestaurantsService } from './restaurants.service';
 import { Restaurant } from './schemas/restaurant.schema';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 
 @Controller('restaurants')
 export class RestaurantsController {
@@ -30,6 +31,15 @@ export class RestaurantsController {
   @Get(':id')
   async getRestaurantById(@Param('id') id: string) {
     return this.restaurant.findById(id);
+  }
+
+  @Put(':id')
+  async updateRestaurant(
+    @Param('id') id: string,
+    @Body() restaurant: UpdateRestaurantDto,
+  ) {
+    await this.restaurant.findById(id);
+    return this.restaurant.updateRestaurant(id, restaurant);
   }
 
   @Delete()
