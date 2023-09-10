@@ -13,4 +13,8 @@ export class RestaurantsService {
     const restaurants = await this.restaurantModel.find();
     return restaurants;
   }
+
+  async createRestaurant(restaurant: Restaurant): Promise<Restaurant> {
+    return this.restaurantModel.create(restaurant);
+  }
 }
