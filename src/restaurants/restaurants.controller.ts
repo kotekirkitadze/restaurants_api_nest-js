@@ -74,7 +74,7 @@ export class RestaurantsController {
   async uploadFiles(
     @Param('id') id: string,
     @UploadedFiles() files: Array<Express.Multer.File>,
-  ){
+  ) {
     console.log(id);
     console.log(files);
   }

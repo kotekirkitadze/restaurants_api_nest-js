@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-
 @Schema()
 export class Location {
-  @Prop({type: String, enum: ['Point']})
+  @Prop({ type: String, enum: ['Point'] })
   type: string;
-  @Prop({index: '2dsphere'})
+  @Prop({ index: '2dsphere' })
   coordinates: number[];
   @Prop()
   address: string;
@@ -48,8 +47,8 @@ export class Restaurant {
   @Prop()
   images?: object[];
 
-  @Prop({type:Object, ref:'Location'})
-  location?:Location
+  @Prop({ type: Object, ref: 'Location' })
+  location?: Location;
 }
 
 export const RestaurantSchema = SchemaFactory.createForClass(Restaurant);

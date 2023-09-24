@@ -1,10 +1,14 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Restaurant } from './schemas/restaurant.schema';
 import { Query } from 'express-serve-static-core';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
-import ApiFeatures from  '../utils/apiFeatures.utils';
+import ApiFeatures from '../utils/apiFeatures.utils';
 // import { CreateCatDto } from './dto/create-cat.dto';
 @Injectable()
 export class RestaurantsService {
@@ -34,14 +38,18 @@ export class RestaurantsService {
   }
 
   async createRestaurant(restaurant: Restaurant): Promise<Restaurant> {
-    const location = await ApiFeatures.getRestaurantLocations(restaurant.address);
-    return this.restaurantModel.create(Object.assign(restaurant, {location}));
+    const location = await ApiFeatures.getRestaurantLocations(
+      restaurant.address,
+    );
+    return this.restaurantModel.create(Object.assign(restaurant, { location }));
   }
 
   async findById(id: string): Promise<Restaurant> {
     const restaurant = this.restaurantModel.findById(id);
-    if(!mongoose.isValidObjectId(id)) {
-      throw new BadRequestException('Wrong Mongose ID, Please provide correct id');
+    if (!mongoose.isValidObjectId(id)) {
+      throw new BadRequestException(
+        'Wrong Mongose ID, Please provide correct id',
+      );
     }
     if (!restaurant) {
       throw new NotFoundException('Restaurant not found');

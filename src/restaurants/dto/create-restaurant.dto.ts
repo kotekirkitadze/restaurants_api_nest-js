@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Category } from '../schemas/restaurant.schema';
-import { IsNotEmpty, IsString, IsEmail, IsPhoneNumber, IsEnum } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsEmail,
+  IsPhoneNumber,
+  IsEnum,
+} from 'class-validator';
 
 export class CreateRestaurantDto {
   // @ApiProperty({
@@ -23,7 +29,7 @@ export class CreateRestaurantDto {
   //   example: 'test@gmail.com',
   // })
   @IsNotEmpty()
-  @IsEmail({}, { message: 'Please provide a valid email'})
+  @IsEmail({}, { message: 'Please provide a valid email' })
   readonly email: string;
   // @ApiProperty({
   //   description: 'The phone number of the restaurant',
