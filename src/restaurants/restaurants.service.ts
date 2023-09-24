@@ -34,9 +34,9 @@ export class RestaurantsService {
   }
 
   async createRestaurant(restaurant: Restaurant): Promise<Restaurant> {
-    const location = ApiFeatures.getRestaurantLocations(restaurant.address);
-
-    return this.restaurantModel.create(restaurant);
+    const location = await ApiFeatures.getRestaurantLocations(restaurant.address);
+    console.log(location)
+    return this.restaurantModel.create(Object.assign(restaurant, {location}));
   }
 
   async findById(id: string): Promise<Restaurant> {
