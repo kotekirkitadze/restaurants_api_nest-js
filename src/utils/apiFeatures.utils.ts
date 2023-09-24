@@ -33,7 +33,7 @@ export default class ApiFeatures {
 
   static async upload(files) {
     return new Promise((resolve) => {
-      const s3 = new S3( );
+      const s3 = new S3();
 
       const images = [];
 
@@ -61,7 +61,7 @@ export default class ApiFeatures {
   }
 
   static async deleteImages(images) {
-    const s3 = new S3( );
+    const s3 = new S3();
 
     const imagesKey = images.map((image) => ({ Key: image.key }));
     console.log(imagesKey);
