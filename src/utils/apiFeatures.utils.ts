@@ -33,11 +33,11 @@ export default class ApiFeatures {
 
   static async upload(files) {
     return new Promise((resolve) => {
-      const s3 = new S3({});
+      const s3 = new S3();
 
       const images = [];
 
-      files.forEach(async (file) => { 
+      files.forEach(async (file) => {
         const splitFile = file.originalname.split('.');
         const random = Date.now();
 
@@ -55,6 +55,31 @@ export default class ApiFeatures {
 
         if (images.length === files.length) {
           resolve(images);
+        }
+      });
+    });
+  }
+
+  static async deleteImages(images) {
+    const s3 = new S3();
+
+    const imagesKey = images.map((image) => ({ Key: image.key }));
+    console.log(imagesKey);
+    const params = {
+      Bucket: 'restaurants-api',
+      Delete: {
+        Objects: imagesKey,
+        Quiet: false,
+      },
+    };
+
+    return new Promise((resolve, reject) => {
+      s3.deleteObjects(params, (err, data) => {
+        if (err) {
+          console.log(err);
+          reject(false);
+        } else {
+          resolve(data);
         }
       });
     });
