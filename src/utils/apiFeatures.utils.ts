@@ -1,7 +1,7 @@
 const NodeGeocoder = require('node-geocoder');
 
 export default class ApiFeatures{
-    async getRestaurantLocations (address:string){
+   static async getRestaurantLocations (address:string){
         try {
             const options = {
                 provider: 'mapquest', 
@@ -19,8 +19,9 @@ export default class ApiFeatures{
                     coordinates: [loc[0].longitude, loc[0].latitude],
                     address: loc[0].formattedAddress,
                     city: loc[0].city,
+                    state: loc[0].state,
                     zipcode: loc[0].zipcode,
-                    country: loc[0].country
+                    country: loc[0].countryCode
               }
               return location
              
