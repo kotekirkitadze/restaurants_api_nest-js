@@ -86,4 +86,18 @@ export class RestaurantsController {
     const res = this.restaurant.uploadImages(id, files);
     return res;
   }
+
+  @Post('alternativeCreation')
+  @UseInterceptors(FilesInterceptor('images'))
+  async alternativeCreation(
+    @Body() restaurant: CreateRestaurantDto,
+    @UploadedFiles() files: Express.Multer.File[],
+  ): Promise<Restaurant> {
+    const createdImage = (await this.restaurant.createRestaurant(
+      restaurant,
+    )) as any;
+    console.log(createdImage._id.toString());
+    // return createdImage
+    return this.restaurant.uploadImages(createdImage._id.toString(), files);
+  }
 }
