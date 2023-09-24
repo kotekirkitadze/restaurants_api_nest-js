@@ -68,4 +68,10 @@ export class RestaurantsService {
   async deleteRestaurant(id: string) {
     return await this.restaurantModel.findByIdAndDelete(id);
   }
+
+  async uploadImages(id, files) {
+    const images = await ApiFeatures.upload(files);
+    console.log(images);
+    return images;
+  }
 }

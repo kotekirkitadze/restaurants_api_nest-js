@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const NodeGeocoder = require('node-geocoder');
 import { S3 } from 'aws-sdk';
 import { Location } from '../restaurants/schemas/restaurant.schema';
@@ -31,17 +32,32 @@ export default class ApiFeatures {
   }
 
   static async upload(files) {
-    return new Promise((resolve, reject) => {
-      const s3 = new S3({
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      });
+    return new Promise((resolve) => {
+      const s3 = new S3({});
 
-      const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: files[0].originalname,
-        Body: files[0].buffer,
-      };
+      const images = [];
+
+      files.forEach(async (file) => {
+        console.log(file, 'file');
+        const splitFile = file.originalname.split('.');
+        const random = Date.now();
+
+        const fileName = `${splitFile[0]}_${random}.${splitFile[1]}`;
+
+        const params = {
+          Bucket: 'restaurants-api/restaurants',
+          Key: fileName,
+          Body: file.buffer,
+        };
+
+        const uploadResponse = await s3.upload(params).promise();
+
+        images.push(uploadResponse);
+
+        if (images.length === files.length) {
+          resolve(images);
+        }
+      });
     });
   }
 }
