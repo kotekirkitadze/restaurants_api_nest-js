@@ -37,8 +37,7 @@ export default class ApiFeatures {
 
       const images = [];
 
-      files.forEach(async (file) => {
-        console.log(file, 'file');
+      files.forEach(async (file) => { 
         const splitFile = file.originalname.split('.');
         const random = Date.now();
 

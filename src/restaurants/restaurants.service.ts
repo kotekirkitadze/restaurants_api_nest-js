@@ -71,7 +71,6 @@ export class RestaurantsService {
 
   async uploadImages(id, files) {
     const images = await ApiFeatures.upload(files);
-    console.log(images);
     return images;
   }
 }
