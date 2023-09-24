@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Restaurant } from './schemas/restaurant.schema';
 import { Query } from 'express-serve-static-core';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 // import { CreateCatDto } from './dto/create-cat.dto';
 @Injectable()
 export class RestaurantsService {
@@ -37,7 +38,9 @@ export class RestaurantsService {
 
   async findById(id: string): Promise<Restaurant> {
     const restaurant = this.restaurantModel.findById(id);
-
+    if(!mongoose.isValidObjectId(id)) {
+      throw new BadRequestException('Wrong Mongose ID, Please provide correct id');
+    }
     if (!restaurant) {
       throw new NotFoundException('Restaurant not found');
     }
@@ -45,7 +48,7 @@ export class RestaurantsService {
     return restaurant;
   }
 
-  async updateRestaurant(id: string, restaurant: Restaurant) {
+  async updateRestaurant(id: string, restaurant: UpdateRestaurantDto) {
     return await this.restaurantModel.findByIdAndUpdate(id, restaurant, {
       new: true,
       runValidators: true,
