@@ -9,13 +9,16 @@ import { SignUpDto } from './dto/signUp.dto';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import { LoginDto } from './dto/loginDto';
+import { JwtService } from '@nestjs/jwt';
+import ApiFeatures from 'src/utils/apiFeatures.utils';
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
+    private jwtService: JwtService,
   ) {}
 
-  async signUp(signUpDto: SignUpDto): Promise<User> {
+  async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
     const { name, password, email } = signUpDto;
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -25,7 +28,9 @@ export class AuthService {
         password: hashedPassword,
         email,
       });
-      return user;
+      const token = await ApiFeatures.assignJWTtoken(user._id, this.jwtService);
+
+      return { token };
     } catch (error) {
       if (error.code == 11000) {
         throw new ConflictException('Email already exists');
@@ -33,9 +38,9 @@ export class AuthService {
     }
   }
 
-  async login(loginDto: LoginDto): Promise<User> {
+  async login(loginDto: LoginDto): Promise<{ token: string }> {
     const { email, password } = loginDto;
-    console.log(email, password);
+
     const user = await this.userModel.findOne({ email }).select('+password');
     if (!user) {
       throw new UnauthorizedException('Invalid email');
@@ -44,6 +49,8 @@ export class AuthService {
     if (!isMatch) {
       throw new UnauthorizedException('Invalid password');
     }
-    return user;
+    const token = await ApiFeatures.assignJWTtoken(user._id, this.jwtService);
+
+    return { token };
   }
 }

@@ -2,6 +2,7 @@
 const NodeGeocoder = require('node-geocoder');
 import { S3 } from 'aws-sdk';
 import { Location } from '../restaurants/schemas/restaurant.schema';
+import { JwtService } from '@nestjs/jwt';
 export default class ApiFeatures {
   static async getRestaurantLocations(address: string) {
     try {
@@ -83,5 +84,11 @@ export default class ApiFeatures {
         }
       });
     });
+  }
+
+  static async assignJWTtoken(userId: string, jwtService: JwtService) {
+    const payload = { id: userId };
+    const token = await jwtService.sign(payload);
+    return token;
   }
 }
