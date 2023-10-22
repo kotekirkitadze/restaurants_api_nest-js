@@ -1,9 +1,14 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { SignUpDto } from './dto/signUp.dto';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
+import { LoginDto } from './dto/loginDto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -26,5 +31,19 @@ export class AuthService {
         throw new ConflictException('Email already exists');
       }
     }
+  }
+
+  async login(loginDto: LoginDto): Promise<User> {
+    const { email, password } = loginDto;
+    console.log(email, password);
+    const user = await this.userModel.findOne({ email }).select('+password');
+    if (!user) {
+      throw new UnauthorizedException('Invalid email');
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('Invalid password');
+    }
+    return user;
   }
 }
