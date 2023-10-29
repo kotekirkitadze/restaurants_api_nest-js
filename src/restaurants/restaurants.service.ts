@@ -9,6 +9,7 @@ import { Restaurant } from './schemas/restaurant.schema';
 import { Query } from 'express-serve-static-core';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import ApiFeatures from '../utils/apiFeatures.utils';
+import { User } from 'src/auth/schema/user.schema';
 // import { CreateCatDto } from './dto/create-cat.dto';
 @Injectable()
 export class RestaurantsService {
@@ -37,11 +38,16 @@ export class RestaurantsService {
     return restaurants;
   }
 
-  async createRestaurant(restaurant: Restaurant): Promise<Restaurant> {
+  async createRestaurant(
+    restaurant: Restaurant,
+    user: User,
+  ): Promise<Restaurant> {
     const location = await ApiFeatures.getRestaurantLocations(
       restaurant.address,
     );
-    return this.restaurantModel.create(Object.assign(restaurant, { location }));
+    return this.restaurantModel.create(
+      Object.assign(restaurant, { user: user._id, location }),
+    );
   }
 
   async findById(id: string): Promise<Restaurant> {

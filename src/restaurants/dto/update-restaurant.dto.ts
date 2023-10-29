@@ -6,7 +6,9 @@ import {
   IsPhoneNumber,
   IsEnum,
   IsOptional,
+  IsEmpty,
 } from 'class-validator';
+import { User } from '../../auth/schema/user.schema';
 
 export class UpdateRestaurantDto {
   @ApiProperty({
@@ -58,4 +60,9 @@ export class UpdateRestaurantDto {
   @IsOptional()
   @IsEnum(Category)
   readonly category?: Category;
+
+  @IsEmpty({
+    message: 'You can not provide user id',
+  })
+  readonly user: User;
 }

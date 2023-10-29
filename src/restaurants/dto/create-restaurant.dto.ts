@@ -6,7 +6,9 @@ import {
   IsEmail,
   IsPhoneNumber,
   IsEnum,
+  IsEmpty,
 } from 'class-validator';
+import { User } from '../../auth/schema/user.schema';
 
 export class CreateRestaurantDto {
   // @ApiProperty({
@@ -55,4 +57,9 @@ export class CreateRestaurantDto {
   @IsNotEmpty()
   @IsEnum(Category)
   readonly category: Category;
+
+  @IsEmpty({
+    message: 'You can not provide user id',
+  })
+  readonly user: User;
 }

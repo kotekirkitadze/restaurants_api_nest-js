@@ -20,7 +20,7 @@ import { ApiParam } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { User } from 'src/auth/schema/user.schema';
+import { User } from '../auth/schema/user.schema';
 @Controller('restaurants')
 export class RestaurantsController {
   constructor(private restaurant: RestaurantsService) {}
@@ -39,19 +39,17 @@ export class RestaurantsController {
     type: Number,
   })
   @UseGuards(AuthGuard())
-  async getAllRestaurants(
-    @Query() query: ExpressQuery,
-    @CurrentUser() user: User,
-  ): Promise<Restaurant[]> {
-    console.log(user);
+  async getAllRestaurants(@Query() query: ExpressQuery): Promise<Restaurant[]> {
     return this.restaurant.findAll(query);
   }
 
   @Post()
+  @UseGuards(AuthGuard())
   async createRestaurant(
     @Body() restaurant: CreateRestaurantDto,
+    @CurrentUser() user: User,
   ): Promise<Restaurant> {
-    return this.restaurant.createRestaurant(restaurant);
+    return this.restaurant.createRestaurant(restaurant, user);
   }
 
   @Get(':id')
@@ -98,12 +96,15 @@ export class RestaurantsController {
 
   @Post('alternativeCreation')
   @UseInterceptors(FilesInterceptor('images'))
+  @UseGuards(AuthGuard())
   async alternativeCreation(
     @Body() restaurant: CreateRestaurantDto,
     @UploadedFiles() files: Express.Multer.File[],
+    @CurrentUser() user: User,
   ): Promise<Restaurant> {
     const createdImage = (await this.restaurant.createRestaurant(
       restaurant,
+      user,
     )) as any;
     console.log(createdImage._id.toString());
     // return createdImage
