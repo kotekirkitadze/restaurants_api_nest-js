@@ -19,6 +19,8 @@ import { Query as ExpressQuery } from 'express-serve-static-core';
 import { ApiParam } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { User } from 'src/auth/schema/user.schema';
 @Controller('restaurants')
 export class RestaurantsController {
   constructor(private restaurant: RestaurantsService) {}
@@ -37,7 +39,11 @@ export class RestaurantsController {
     type: Number,
   })
   @UseGuards(AuthGuard())
-  async getAllRestaurants(@Query() query: ExpressQuery): Promise<Restaurant[]> {
+  async getAllRestaurants(
+    @Query() query: ExpressQuery,
+    @CurrentUser() user: User,
+  ): Promise<Restaurant[]> {
+    console.log(user);
     return this.restaurant.findAll(query);
   }
 

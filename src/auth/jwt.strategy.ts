@@ -22,6 +22,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         'Please log in firstly to get access to this resources',
       );
     }
-    return user;
+        return user;
   }
 }
